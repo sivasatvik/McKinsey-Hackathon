@@ -145,7 +145,9 @@ print data_test[0]
 from sklearn.neural_network import MLPClassifier,MLPRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.model_selection import train_test_split
 import xgboost as xgb
+import lightgbm as lgb
 # clf = MLPClassifier(hidden_layer_sizes=(100, ), activation='relu', solver='adam', alpha=0.0001, batch_size='auto', learning_rate='constant', learning_rate_init=0.000000001, power_t=0.5, max_iter=200, shuffle=True, random_state=123, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=True, early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 # clf = MLPRegressor(hidden_layer_sizes=(500, ), activation="logistic", solver="adam", alpha=0.0009, batch_size="auto", learning_rate="constant", learning_rate_init=0.001, power_t=0.5, max_iter=200, shuffle=True, random_state=1, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=True, early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-5)
 #clf = RandomForestRegressor(n_estimators=100, criterion="mse", max_depth=25, min_samples_split=750, min_samples_leaf=500, min_weight_fraction_leaf=0.00001, max_features="auto", max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=-1, random_state=None, verbose=0, warm_start=False)
@@ -170,6 +172,42 @@ y_pred = xg.predict(dtest)
 '''
 
 
+X_train, X_val, y_train,y_val = train_test_split(X_train,y_train,test_size=0.3)
+lgb_train = lgb.Dataset(X_train, y_train)
+lgb_eval = lgb.Dataset(X_val, y_val, reference=lgb_train)
+
+params = {
+    'task': 'train',
+    'boosting_type': 'gbdt',
+    'metric': {'rmse'},
+    'num_leaves': 55,
+    'max_depth'  :6 ,
+    'max_bin'    :101,
+    'learning_rate': 0.05,
+    'feature_fraction': 0.9,
+    'bagging_fraction': 0.8,
+    'bagging_freq': 100,
+    'verbose': 0
+}
+
+print('Start training...')
+# train
+gbm = lgb.train(params,
+                lgb_train,
+                num_boost_round=500,
+                valid_sets=lgb_eval,
+                early_stopping_rounds=50)
+
+print('Save model...')
+# save model to file
+gbm.save_model('model.txt')
+
+print('Start predicting...')
+# predict
+y_pred = gbm.predict(data_test, num_iteration=gbm.best_iteration)
+
+
+
 # print np.array(j1_X_train).shape[1]
 
 
@@ -189,8 +227,7 @@ y_pred = xg.predict(dtest)
 # plt.show()
 
 
-
-print y_pred
+print len(y_pred)
 i = 0
 f = open("output.csv", "w")
 f.write("ID,Vehicles\n")
@@ -200,6 +237,7 @@ for line in y_pred:
     f.write(",")
     f.write(str(line))
     f.write("\n")
+    print i
     i += 1
 
 
