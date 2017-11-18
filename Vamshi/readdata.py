@@ -2,7 +2,7 @@
 # @Author: vamshiteja
 # @Date:   2017-11-18 07:50:22
 # @Last Modified by:   vamshi
-# @Last Modified time: 2017-11-18 12:34:37
+# @Last Modified time: 2017-11-18 13:11:23
 
 import pandas as pd
 import numpy as np
@@ -26,21 +26,36 @@ def read(file_dir):
 	df = pd.read_csv(file_dir,header=0,names=header)
 	#plt.plot(df['Vehichles'])
 	Days = []
+	Year = []
+	Month = []
+	Date = []
 	for dt in df['DateTime']:
 		dt = dt.split(" ")[0]
+		year, month, day = (int(x) for x in dt.split('-'))
+		Year.append(year)
+		Month.append(month)
+		Date.append(day)
 		day = tell_day(dt)
 		Days.append(day)
 	
 	df['DateTime'] = df['DateTime'].astype('datetime64[ns]')
+
+	#Add new columns
 	df = pd.DataFrame(df)
 	df = df.assign(day= Days)
+	df = df.assign(Year=Year)
+	df = df.assign(Month=Month)
+	df = df.assign(Date=Date)
+
+	#convert week_days (cat) to numerical
 	df['day'] = df['day'].astype('category')
 	df['day'] = df['day'].cat.codes
 
+	print df
 	rolling_mean = pd.rolling_mean(df['Vehichles'], window=7)
 	plt.plot(rolling_mean)
 	plt.show()
-	print rolling_mean
+	
  	return df
 
 df = read(train_file)
