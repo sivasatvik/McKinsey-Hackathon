@@ -145,14 +145,29 @@ print data_test[0]
 from sklearn.neural_network import MLPClassifier,MLPRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+import xgboost as xgb
 # clf = MLPClassifier(hidden_layer_sizes=(100, ), activation='relu', solver='adam', alpha=0.0001, batch_size='auto', learning_rate='constant', learning_rate_init=0.000000001, power_t=0.5, max_iter=200, shuffle=True, random_state=123, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=True, early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 # clf = MLPRegressor(hidden_layer_sizes=(500, ), activation="logistic", solver="adam", alpha=0.0009, batch_size="auto", learning_rate="constant", learning_rate_init=0.001, power_t=0.5, max_iter=200, shuffle=True, random_state=1, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=True, early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-5)
-clf = RandomForestRegressor(n_estimators=100, criterion="mse", max_depth=25, min_samples_split=750, min_samples_leaf=500, min_weight_fraction_leaf=0.00001, max_features="auto", max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=-1, random_state=None, verbose=0, warm_start=False)
+#clf = RandomForestRegressor(n_estimators=100, criterion="mse", max_depth=25, min_samples_split=750, min_samples_leaf=500, min_weight_fraction_leaf=0.00001, max_features="auto", max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=-1, random_state=None, verbose=0, warm_start=False)
 # clf = DecisionTreeRegressor(criterion="mse", splitter="best", max_depth=750, min_samples_split=2500, min_samples_leaf=1000, min_weight_fraction_leaf=0.0, max_features="auto", random_state=1, max_leaf_nodes=None, min_impurity_decrease=0.000001, min_impurity_split=None, presort=True)
 
-clf.fit(X_train,y_train)
+#clf.fit(X_train,y_train)
 
-y_pred = clf.predict(data_test)
+#y_pred = clf.predict(data_test)
+
+'''
+dtrain = xgb.DMatrix(X_train,label=y_train)
+dval=xgb.DMatrix(data_test)
+dtest = xgb.DMatrix(data_test)
+
+parameters={'max_depth':7, 'eta':0.4, 'silent':0,'eval_metric':'rmse','learning_rate':.005}
+num_round = 5000
+
+xg = xgb.train(parameters,dtrain,num_round) 
+ypred_val=xg.predict(dval)
+
+y_pred = xg.predict(dtest)
+'''
 
 
 # print np.array(j1_X_train).shape[1]
