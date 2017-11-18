@@ -184,7 +184,7 @@ dtest = xgb.DMatrix(data_test)
 parameters={'max_depth':7, 'eta':0.4, 'silent':0,'eval_metric':'rmse','learning_rate':.005}
 num_round = 5000
 
-xg = xgb.train(parameters,dtrain,num_round) 
+xg = xgb.train(parameters,dtrain,num_round)
 ypred_val=xg.predict(dval)
 
 y_pred = xg.predict(dtest)
@@ -199,8 +199,8 @@ params = {
     'task': 'train',
     'boosting_type': 'gbdt',
     'metric': {'rmse'},
-    'num_leaves': 55,
-    'max_depth'  :6 ,
+    'num_leaves': 500,
+    'max_depth'  :25 ,
     'max_bin'    :101,
     'learning_rate': 0.05,
     'feature_fraction': 0.9,
@@ -213,9 +213,9 @@ print('Start training...')
 # train
 gbm = lgb.train(params,
                 lgb_train,
-                num_boost_round=500,
+                num_boost_round=1000,
                 valid_sets=lgb_eval,
-                early_stopping_rounds=50)
+                early_stopping_rounds=10)
 
 print('Save model...')
 # save model to file
@@ -256,7 +256,7 @@ for line in y_pred:
     f.write(",")
     f.write(str(line))
     f.write("\n")
-    print i
+    # print i
     i += 1
 
 
