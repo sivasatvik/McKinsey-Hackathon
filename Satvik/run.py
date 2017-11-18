@@ -144,11 +144,18 @@ print data_test[0]
 # print j1_X_valid[1]
 from sklearn.neural_network import MLPClassifier,MLPRegressor
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor, ExtraTreesRegressor
+from sklearn.ensemble import VotingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import AdaBoostClassifier
 # clf = MLPClassifier(hidden_layer_sizes=(100, ), activation='relu', solver='adam', alpha=0.0001, batch_size='auto', learning_rate='constant', learning_rate_init=0.000000001, power_t=0.5, max_iter=200, shuffle=True, random_state=123, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=True, early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 # clf = MLPRegressor(hidden_layer_sizes=(500, ), activation="logistic", solver="adam", alpha=0.0009, batch_size="auto", learning_rate="constant", learning_rate_init=0.001, power_t=0.5, max_iter=200, shuffle=True, random_state=1, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=True, early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-5)
-clf = RandomForestRegressor(n_estimators=100, criterion="mse", max_depth=25, min_samples_split=750, min_samples_leaf=500, min_weight_fraction_leaf=0.00001, max_features="auto", max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=-1, random_state=None, verbose=0, warm_start=False)
-# clf = DecisionTreeRegressor(criterion="mse", splitter="best", max_depth=750, min_samples_split=2500, min_samples_leaf=1000, min_weight_fraction_leaf=0.0, max_features="auto", random_state=1, max_leaf_nodes=None, min_impurity_decrease=0.000001, min_impurity_split=None, presort=True)
+# clf = RandomForestRegressor(n_estimators=100, criterion="mse", max_depth=25, min_samples_split=750, min_samples_leaf=500, min_weight_fraction_leaf=0.00001, max_features="auto", max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=-1, random_state=None, verbose=0, warm_start=False)
+# clf = DecisionTreeRegressor(criterion="mse", splitter="best", max_depth=500, min_samples_split=1000, min_samples_leaf=600, min_weight_fraction_leaf=0.0, max_features="auto", random_state=1, max_leaf_nodes=None, min_impurity_decrease=0.000001, min_impurity_split=None, presort=True)
+# clf = AdaBoostClassifier(base_estimator=None, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R', random_state=1)
+clf = ExtraTreesRegressor(n_estimators=100, criterion='mse', max_depth=25, min_samples_split=750, min_samples_leaf=500, min_weight_fraction_leaf=0.00001, max_features='auto', max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=-1, random_state=None, verbose=0, warm_start=False)
+
 
 clf.fit(X_train,y_train)
 
