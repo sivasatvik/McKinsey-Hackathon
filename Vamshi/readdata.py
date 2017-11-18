@@ -2,7 +2,9 @@
 # @Author: vamshiteja
 # @Date:   2017-11-18 07:50:22
 # @Last Modified by:   vamshi
+
 # @Last Modified time: 2017-11-18 20:28:33
+
 
 import pandas as pd
 import numpy as np
@@ -29,7 +31,9 @@ def tell_day(dt):
 
 def read(file_dir):
 	df = pd.read_csv(file_dir,header=0,names=header)
+
 	plt.plot(df['Vehichles'])
+
 	Days,Year,Month,Date,Hours = [],[],[],[],[]
 
 	for dt in df['DateTime']:
@@ -62,8 +66,10 @@ def read(file_dir):
 	df = df.assign(Vehichles=vech)
 
 	rolling_mean = pd.rolling_mean(df['Vehichles'], window=7)
+
 	plt.plot(rolling_mean)
 	plt.show()
+
  	return df 
 
 #This func splits input based on junctions
@@ -132,7 +138,9 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
 	return agg
 
 #print y_tr
+
 t = 6 
+
 series_data_tr = series_to_supervised(y_tr,t)
 series_data = series_data_tr.as_matrix()
 #print series_data[0]
@@ -146,10 +154,12 @@ X_series_val = series_data[:][0:(t-1)]
 y_series_val = series_data[:][(t-1)]
 
 
+
 LOG_DIR = './ops_logs/lstm_weather'
 TIMESTEPS = 7
 RNN_LAYERS = [{'num_units': 5}]
 DENSE_LAYERS = [1,1]
+
 TRAINING_STEPS = 100000
 BATCH_SIZE = 100
 PRINT_STEPS = TRAINING_STEPS / 100
